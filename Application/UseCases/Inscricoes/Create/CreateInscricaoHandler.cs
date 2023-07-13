@@ -36,16 +36,9 @@ namespace Application.UseCases.Inscricoes.Create
                 
                 foreach (var item in request.FilesIds)
                 {
-
                     var imageFile = _fileRepository.GetById(item);
-                    if (imageFile.Type.Contains("image")){
-                        files.Add(imageFile);
-                    }
-                    _fileRepository.Delete(item);
-                    _fileRepository.Commit();
+                    files.Add(imageFile);
                 }
-
-                _fileRepository.InsertRange(files);
 
                 var file =files
                     .Select(f => new SubscribeFile { SubscribeId = inscricao.Id, FileId = f.Id });
@@ -53,7 +46,6 @@ namespace Application.UseCases.Inscricoes.Create
             }
 
             _inscricaoRepository.Commit();
-            _fileRepository.Commit();
             _subscribeFileRepository.Commit();
 
             return new InscricaoValidationResult

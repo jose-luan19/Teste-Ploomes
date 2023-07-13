@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace reality_subscribe_api.Controllers
 {
-    public class InscricaoController : RealityControllerBase
+    public class SubscribeController : RealityControllerBase
     {
         public readonly IMediator _mediator;
-        public InscricaoController(IMediator mediator, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
+        public SubscribeController(IMediator mediator, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _mediator = mediator;
         }
