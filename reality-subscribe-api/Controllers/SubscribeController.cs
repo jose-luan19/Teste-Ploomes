@@ -24,7 +24,7 @@ namespace reality_subscribe_api.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest("Email ["+inscricao.Email +"] é Invalido");
+                return BadRequest(e.Message);
             }
 
             return Ok(result);
@@ -33,7 +33,14 @@ namespace reality_subscribe_api.Controllers
         [HttpPut("Confirm")]
         public async Task<ActionResult> Confirm(ConfirmSubscribeCommand subs)
         {
-            await _mediator.Send(subs);
+            try
+            {
+                await _mediator.Send(subs);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
 
             return NoContent();
         }

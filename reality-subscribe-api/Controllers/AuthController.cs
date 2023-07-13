@@ -2,6 +2,7 @@
 using Application.UseCases.Register;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Wavefront.SDK.CSharp.Common;
 
 namespace reality_subscribe_api.Controllers
 {
@@ -14,17 +15,37 @@ namespace reality_subscribe_api.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromBody] LoginCommand login)
+        public async Task<ActionResult> Login(LoginCommand login)
         {
-            var result = await _mediator.Send(login);
-            return new ObjectResult(result);
+            LoginCommandResult result;
+
+            try
+            {
+                result = await _mediator.Send(login);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
+            return Ok(result);
         }
 
         [HttpPost("Register")]
-        public async Task<IActionResult> Register([FromBody] RegisterCommand register)
+        public async Task<ActionResult> Register(RegisterCommand register)
         {
-            var result = await _mediator.Send(register);
-            return new ObjectResult(result);
+            RegisterCommandResult result;
+
+            try
+            {
+                result = await _mediator.Send(register);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
+            return Ok(result);
         }
     }
 }

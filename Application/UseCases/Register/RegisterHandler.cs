@@ -1,4 +1,5 @@
 ﻿using Application.Infra;
+using Application.Service;
 using AutoMapper;
 using DevOne.Security.Cryptography.BCrypt;
 using MediatR;
@@ -21,23 +22,18 @@ namespace Application.UseCases.Register
         {
             if (string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Senha))
             {
-                return new RegisterCommandResult
-                {
-                    hasLogin = false,
-                    Message = "Campos vazios ou incorretos"
-                };
+                throw new ArgumentException("Campos vazios");
             }
+
+            RegexEmail.validEmail(request.Email);
+
             var user = _repository.Queryable()
                 .Where(x => x.Email == request.Email)
                 .FirstOrDefault();
 
             if(user != null) 
             {
-                return new RegisterCommandResult
-                {
-                    hasLogin = false,
-                    Message = "Usuario já existe no sistema"
-                };
+                throw new ArgumentException("Usuario já exise no sistema");
             }
 
             string salt = BCryptHelper.GenerateSalt();

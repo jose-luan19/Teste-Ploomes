@@ -1,4 +1,5 @@
 ﻿using Application.Infra;
+using Application.Service;
 using AutoMapper;
 using Azure;
 using MediatR;
@@ -30,22 +31,26 @@ namespace Application.UseCases.Inscricoes.Create
         public async Task<SubscribeResult> Handle(CreateSubscribeCommand request, CancellationToken cancellationToken)
         {
             var inscricao = _mapper.Map<Subscribe>(request);
-            validEmail(inscricao.Email);
+            RegexEmail.validEmail(inscricao.Email);
             _inscricaoRepository.Insert(inscricao);
 
             if (request.FilesIds.Count > 0)
             {
-                List<Models.File> files = new();
+                List<Models.File> listFiles = new();
                 
-                foreach (var item in request.FilesIds)
+                foreach (var fileId in request.FilesIds)
                 {
-                    var imageFile = _fileRepository.GetById(item);
-                    files.Add(imageFile);
+                    var file = _fileRepository.GetById(fileId);
+                    if (file == null)
+                    {
+                        throw new NullReferenceException("Não existe file com o ID: " + fileId.ToString());
+                    }
+                    listFiles.Add(file);
                 }
 
-                var file =files
+                var sbuscribeFile = listFiles
                     .Select(f => new SubscribeFile { SubscribeId = inscricao.Id, FileId = f.Id });
-                _subscribeFileRepository.InsertRange(file);
+                _subscribeFileRepository.InsertRange(sbuscribeFile);
                 _subscribeFileRepository.Commit();
             }
 
@@ -57,16 +62,6 @@ namespace Application.UseCases.Inscricoes.Create
                 Nome = request.Nome,
                 Email = request.Email,
             };
-        }
-
-        private void validEmail(string email)
-        {
-            Regex rg = new Regex(@"^(?("")("".+?""@)|(([0-9a-zA-Z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-zA-Z])@))(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,6}))$");
-
-            if (!rg.IsMatch(email))
-            {
-                throw new ArgumentException();
-            }
         }
     }
 }
