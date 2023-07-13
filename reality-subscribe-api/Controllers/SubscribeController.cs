@@ -15,19 +15,27 @@ namespace reality_subscribe_api.Controllers
         }
 
         [HttpPost("Create")]
-        public async Task<ActionResult> Create(CreateInscricaoCommand inscricao)
+        public async Task<ActionResult> Create(CreateSubscribeCommand inscricao)
         {
-            var result = await _mediator.Send(inscricao);
+            SubscribeResult result;
+            try
+            {
+                result  = await _mediator.Send(inscricao);
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Email ["+inscricao.Email +"] é Invalido");
+            }
 
             return Ok(result);
         }
 
         [HttpPut("Confirm")]
-        public async Task<ActionResult> Confirm(ConfirmInscricaoCommand subs)
+        public async Task<ActionResult> Confirm(ConfirmSubscribeCommand subs)
         {
-            var result = await _mediator.Send(subs);
+            await _mediator.Send(subs);
 
-            return Ok();
+            return NoContent();
         }
 
         [HttpGet("Getall")]

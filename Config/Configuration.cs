@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 using System.Reflection;
 
 namespace Config
@@ -13,24 +14,33 @@ namespace Config
         public List<Service> Services { get; set; }
         public List<string> CorsOrigins { get; set; }
 
-        public static Service GetService(string serviceName)
+        public static Service? GetService(string serviceName)
         {
             var settings = LoadJson();
             return settings.Services.FirstOrDefault(x => x.ServiceName == serviceName);
         }
 
-        public static List<string> GetCorsOrigins()
+        public static List<string>? GetCorsOrigins()
         {
             return LoadJson()?.CorsOrigins;
         }
 
         private static RealityCoreConfiguration LoadJson()
         {
-            RealityCoreConfiguration config = null;
+            string file = "";
+#if DEVELOPMENT
+            file = "appsettings.Development.json";
+#endif
+
+#if PRODUCTION
+            file = "appsettings.Production.json";
+#endif
+
+            RealityCoreConfiguration? config = null;
             if (GlobalSettings.Configuration == null)
             {
                 var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                var configPath = Path.Combine(path, "appsettings.Development.json");
+                var configPath = Path.Combine(path, file);
                 var reader = new JsonTextReader(new StringReader(File.ReadAllText(configPath)));
                 var serializer = new JsonSerializer();
                 config = serializer.Deserialize<RealityCoreConfiguration>(reader);

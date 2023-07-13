@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Application.UseCases.Inscricoes.Confirm
 {
-    public class ConfirmInscricaoCommand : IRequest<ConfirmInscricaoResult>
+    public class ConfirmSubscribeCommand : IRequest<ConfirmSubscribeResult>
     {
         public List<Guid> Ids { get; set; }
     }

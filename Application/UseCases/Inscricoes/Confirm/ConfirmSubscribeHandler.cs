@@ -9,16 +9,16 @@ using System.Threading.Tasks;
 
 namespace Application.UseCases.Inscricoes.Confirm
 {
-    public class ConfirmInscricaoHandler : IRequestHandler<ConfirmInscricaoCommand, ConfirmInscricaoResult>
+    public class ConfirmSubscribeHandler : IRequestHandler<ConfirmSubscribeCommand, ConfirmSubscribeResult>
     {
         private readonly IARepository<Subscribe> _repository;
 
-        public ConfirmInscricaoHandler(IARepository<Subscribe> repository)
+        public ConfirmSubscribeHandler(IARepository<Subscribe> repository)
         {
             _repository = repository;
         }
 
-        public async Task<ConfirmInscricaoResult> Handle(ConfirmInscricaoCommand request, CancellationToken cancellationToken)
+        public async Task<ConfirmSubscribeResult> Handle(ConfirmSubscribeCommand request, CancellationToken cancellationToken)
         {
             foreach (var id in request.Ids)
             {
@@ -27,7 +27,7 @@ namespace Application.UseCases.Inscricoes.Confirm
                 _repository.Update(resultQuery);
                 _repository.Commit();
             }
-            return new ConfirmInscricaoResult();
+            return new ConfirmSubscribeResult();
 
         }
     }

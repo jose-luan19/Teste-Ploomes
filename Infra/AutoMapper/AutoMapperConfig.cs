@@ -12,7 +12,7 @@ namespace Infra.AutoMapper
     {
         public AutoMapperConfig()
         {
-            CreateMap<Subscribe, CreateInscricaoCommand>().ReverseMap();
+            CreateMap<Subscribe, CreateSubscribeCommand>().ReverseMap();
             CreateMap<User, LoginCommand>().ReverseMap();
             CreateMap<User, RegisterCommand>().ReverseMap();
             CreateMap<File, CreateFIleCommand>().ReverseMap();

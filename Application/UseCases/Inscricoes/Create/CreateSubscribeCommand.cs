@@ -1,10 +1,11 @@
-﻿
+﻿using MediatR;
+
 namespace Application.UseCases.Inscricoes.Create
 {
-    public class InscricaoValidationResult
+    public class CreateSubscribeCommand : IRequest<SubscribeResult>
     {
-        public Guid Id { get; set; }
         public string Nome { get; set; }
         public string Email { get; set; }
+        public List<Guid> FilesIds { get; set; }
     }
 }
